@@ -1,0 +1,24 @@
+1. Uebertragen Firmware in KETEK Stick:
+
+avrdude -p m16u4 -c avrisp2 -P usb -U flash:w:Keyboard.hex
+
+2. Fuse Bits fuer KETEK Stick:
+avrdude -p m16u4 -c avrisp2 -P usb -B 10 -U lfuse:w:0xC2:m -U hfuse:w:0x99:m -U efuse:w:0xCB:m
+
+ACHTUNG: Bei dieser Einstellung ist fuer Tests das Flash und EEPROM noch per ISP auslesbar!
+
+
+3. Nach dem Programmieren muss das stick-write Tool aufgerufen werden.
+
+sudo ./stick-write -d -p 1234567890123456789012345678901234567890123456 -T 1313069845
+
+(Der Timestamp bei der virtuellen Version wird nicht vom Parameter -T uebernommen. Es
+ist ein interner fest eingestellert Wert von dem nach dem einstecken inkrementiert wird)
+
+
+
+4. Testen bzw. Ausgabe des Timestamps
+
+php demo.php yY-6RI68nBIWFvVxBdRbbaQ..
+
+

@@ -1,0 +1,51 @@
+Neuen Stick erstellen:
+
+python bibliothek erzeugen:
+sudo apt-get install python-dev libc6-dev libusb-dev gcc
+sudo python setup.py install
+
+Usage: init.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -c COMPANY, --company=COMPANY
+                        Set company string (up to 50 chars)
+  -o OWNER, --owner=OWNER
+                        Set owner string (up to 50 chars)
+  -p PASSWORD, --password=PASSWORD
+                        Set password (exactly 42 chars)
+  -d DESC, --description=DESC
+                        Set description (up to 50 chars)
+  -l, --lock            Set lock (flag)
+  -i ID, --id=ID        Set id (integer)
+
+Beispiel:
+sudo python init.py -c "Firma A" -o "Hans Bieber" -p soopu9goBoay9vongooth2ooLu8keed1eeng5jo7th -d "Beschreibung"
+
+Das 42 Zeichen lange Passwort kann z.B. mittels pwgen erzeugt werden:
+pwgen 42 1
+
+
+
+Ueberpruefen:
+
+Usage: verify.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -s SEED, --seed=SEED  seed to be used
+
+Beispiel, um Pads von oben zu uebrpruefen:
+python verify.py -s soopu9goBoay9vongooth2ooLu8keed1eeng5jo7th
+
+
+
+Informationen aus Stick auslesen:
+sudo python show.py
+
+Ausgabe:
+company:     Firma A
+owner:       Hans Bieber
+description: Beschreibung
+id:          0
+

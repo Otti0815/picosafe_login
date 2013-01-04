@@ -1,0 +1,128 @@
+# Funktionsweise
+
+Der USB-Stick ist eine Ergänzung zu Benutzername und Passwort. In der bestehenden Anwendung hat man irgendwo die Prüfung ob Benutzername und Passwort stimmen. Genau an dies Stelle kommt die Picosafe Login Funktion.
+
+Damit die Picosafe Klasse jederzeit durch eine neue ausgetauscht werden kann muss man dieser einzeln für den aktuellen Benutzer die notwendigen Datenfelder für die Hardware mitgeben:
+
+Das ganze sieht dann grob so aus:
+
+
+    include("class.picosafelogin.php");
+    $myPicosafe = new PicosafeLogin();
+
+    // die Variablen $aes, $datablock, $counter muss man selber zuvor füllen.
+    $myPicosafe->SetUserAES($aes);
+    $myPicosafe->SetUserDatablock($datablock);
+    $myPicosafe->SetUserCounter($counter);
+
+    if($username == $check_username && $password_hash == md5($password) && $myPicosafe->LoginOTP($token))
+    {
+         echo "Anmeldung erfolreich!";
+         // Synchronisation Counter
+         $newcounter = $myPicosafe->GetLastValidCounter();
+         // BITTE PROGRAMMIEREN: newcounter in die eigene Datenstruktur übertragen
+
+    } else {
+         echo "Fehler! Falcher Benutzername, Passwort oder Token";
+    }
+
+
+# Schritte
+
+Um den USB-Stick als Erweiterung für das Verfahren Benutzername + Passwort verwenden zu können muss man im wesentlichen drei Schritte machen:
+
+* Erweiterung HTML Formular
+* Erweiterung Benutzertabelle für neue Stick Felder
+* Erweiterung der Loginfunktion mit einer weiteren Bedingung (die für den Stick)
+
+
+#HTML Formular
+
+Das Formular muss im ein Feld erweitert werden, so dass man dort wo Benutzername und Passwort vom Server entgegen genommen werden noch das Feld token hinzufügen kann. Der Stick gibt wie eine Tastatur das Passwort aus. Man muss nur den Cursor im richtigen Textfeld stehen haben.
+
+    <input type="text" size="20" name="token">
+
+# Benutzertabelle mit Stick Felder 
+
+Entweder erweitert man die eigene Tabelle oder erstelle eine neue.
+
+## Eigene Datenbank erweitern
+
+Zusätzlich neben dem Benutzername und Passwort bzw. Passworthash werden benötitg
+
+* aes varchar(32)
+* datablock varchar(10)
+* counter int(11)
+
+Im Feld aes wird der AES Schlüssel hinterlegt. Der Schlüssel aes und datablock liegt auf einer Karte dem Stick bei Lieferung bei, bzw. kann man mit den Tools diese jederzeit selber ändern. Der Counter wird später nach jedem Login um eins erhöht. Server und Stick synchronisieren so regelmäßig Ihren Counter.
+
+
+## Vorgeschlagens Datenbank Schema verwenden
+
+Alternativ kann man eine extra Tabelle für diese Informationen erstellen.
+
+
+    CREATE TABLE IF NOT EXISTS picosafelogin (
+       user varchar(255) NOT NULL,
+       aes varchar(255) NOT NULL,
+       datablock varchar(255) NOT NULL,
+       counter int(11) NOT NULL,
+       hw int(11) NOT NULL,
+       locked int(1) NOT NULL,
+       PRIMARY KEY (`user`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+#Typische Fehler
+
+## Uhrzeit auf Server falsch
+
+Die Uhrzeit vom Server wir aktuell in der class.picosafelogin.php in der Methode GetServerTimestamp() mit time() ermittelt. Es wird ein Unix-Timestamp zurückgegen. Der Stick gibt die Uhrzeit als UTC Timestamp aus.
+
+Um zu prüfen was der Stick für einen Timestamp geschickt hat man in der Methode     
+
+    function LoginOTP($givenOtp)
+
+nach der Zeile:
+
+    $result = $this->ParseOTP($givenOtp,$key,$datablock);
+
+folgendes einfügen:
+
+    echo "Hardware Zeit: ".$result["timestamp"]." Server Zeit: ".time();
+
+So sieht man am schnellsten ob alles passt.
+
+## Schluessel falsch bzw. falsche Laenge
+
+Am Ende von der Methode 
+
+    function ParseOTP($givenOtp,$key,$datablock)
+
+Kann man folgende Zeilen aktivieren:
+
+    //echo "Nummer: " . $n . "\n";
+    //echo "Datenblock: " . $plain . " (" . $data . ") \n";
+    //echo "Timestamp: " . $timestamp . "\n";
+    //echo "Datetime: " . date("d.m.Y H:i:s",$timestamp) . "\n";
+
+So sieht man immer ob die Entschlüsselung passt. Wechselt der Timestamp wie verrückt herum oder
+ist der Datenblock jedesmal nach einem Tastendruck auf den Stick neu deutet es auf einen falschen 
+bzw zu kurzen oder zu langen Schlüssel hin. 
+
+
+## Administrations Oberfläche
+
+Im Ordner php liegt eine Datei admin.php. Diese ermöglicht eine einfache Administration von Sticks für Benutzer, wenn man keine eigene Admin Oberfläche hat oder schreiben möchte.
+
+
+
+![Login](http://www.picosafe.de/wp-content/uploads/picosafe_login_admin_login.png)
+![List](http://www.picosafe.de/wp-content/uploads/picosafe_login_admin_list.png)
+![Edit](http://www.picosafe.de/wp-content/uploads/picosafe_login_admin_edit.png)
+
+
+
+
+
