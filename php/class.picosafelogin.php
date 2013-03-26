@@ -132,7 +132,7 @@ class PicosafeLogin {
       return false;
     }
 
-    $result = $this->ParseOTP($givenOtp,$aes,$datablock);
+    $result = $this->ParseOTP($givenOtp,$aes);
 
     //check if is the right aes for the given user
     if($result['datablock']!=$datablock && $datablock!="")
@@ -164,7 +164,7 @@ class PicosafeLogin {
     return true;
   }
 
-  function ParseOTP($givenOtp,$aes,$datablock)
+  function ParseOTP($givenOtp,$aes)
   {
     // base64 Kodierung des Sticks korrigieren
     $givenOtp = rtrim($givenOtp);
@@ -224,6 +224,8 @@ class PicosafeLogin {
     $result['datablock']=$plain;
     $result['timestamp']=$timestamp;
  
+
+    
 
 		/*	
 		echo "<br>"; 

@@ -20,7 +20,8 @@ $pico = new PicosafeLogin("Europe/Berlin");
 if($_POST["givenOtp"]!="")
 {
   $givenOtp = $_POST["givenOtp"];
-  $aesKey = "soopu9goBoay9vongooth2ooLu8keed1eeng5jo7th";
+  $aesKey = "soopu9goBoay9vongooth2ooLu8keed1";
+  //$datablock = "eeng5jo7th";  
 
   $result = $pico->ParseOTP($givenOtp,$aesKey);
 
