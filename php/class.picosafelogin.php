@@ -12,7 +12,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
+    You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
@@ -36,7 +36,7 @@ class PicosafeLogin {
 
 	var $last_valid_counter;
 
-  function PicosafeLogin($timezome="Europe/Berlin")
+  function __construct($timezome="Europe/Berlin")
   {
     // time zone for server + picosafe aes
     date_default_timezone_set($timezone);
@@ -48,35 +48,35 @@ class PicosafeLogin {
   // please overload these methods
   function GetUserAES()
   {
-		// PLEASE FILL WITH YOUR DATA!!
+    // PLEASE FILL WITH YOUR DATA!!
 	
-		// 32 signs
+    // 32 signs
     //return "soopu9goBoay9vongooth2ooLu8keed1";
     return $this->user_aes;
   }
 
   function GetUserCounter()
   {
-		// PLEASE FILL WITH YOUR DATA!!
+    // PLEASE FILL WITH YOUR DATA!!
     return $this->user_counter;//179;
   }
 
- 	function GetUserDatablock()
+  function GetUserDatablock()
   {
-		// PLEASE FILL WITH YOUR DATA!!
-		// 10 signs
+    // PLEASE FILL WITH YOUR DATA!!
+    // 10 signs
     return $this->user_datablock;//"eeng5jo7th";
   }
 
   function SetUserLastCounter($username,$counter)
   {
-		// PLEASE FILL WITH YOUR DATA!!
-		// set internal counter from user to new value givn from givenOtp
+    // PLEASE FILL WITH YOUR DATA!!
+    // set internal counter from user to new value givn from givenOtp
   }
 
   function IsPicosafeLocked($username)
   {
-		// PLEASE FILL WITH YOUR DATA!!
+    // PLEASE FILL WITH YOUR DATA!!
     return false;
   }
 
@@ -88,30 +88,30 @@ class PicosafeLogin {
     return time();
   }
 
-	/************************************************/
-	// or use set methods to load user values from external
+  /************************************************/
+  // or use set methods to load user values from external
 
-	function SetUserAES($aes)
-	{
-		$this->user_aes = $aes;
-	}
+  function SetUserAES($aes)
+  {
+    $this->user_aes = $aes;
+  }
 
-	function SetUserDatablock($datablock)
-	{
-		$this->user_datablock = $datablock;
-	}
-
-
-	function SetUserCounter($counter)
-	{
-		$this->user_counter = $counter;
-	}
+  function SetUserDatablock($datablock)
+  {
+    $this->user_datablock = $datablock;
+  }
 
 
-	function GetLastValidCounter()
-	{
-		return $this->last_valid_counter;
-	}
+  function SetUserCounter($counter)
+  {
+    $this->user_counter = $counter;
+  }
+
+
+  function GetLastValidCounter()
+  {
+    return $this->last_valid_counter;
+  }
 
 
   /************************************************/
