@@ -121,7 +121,7 @@ class PicosafeLogin {
     $aes = $this->GetUserAES();
 
     $counter = $this->GetUserCounter();
-    $data = $this->GetUserDatablock();
+    $datablock = $this->GetUserDatablock();
     $locked = $this->IsPicosafeLocked();
 
 
